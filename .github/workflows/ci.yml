@@ -34,9 +34,13 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
-      - name: Run tests (exclude examples from coverage)
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
+      - name: Run tests (exclude examples from coverage) and produce JUnit
         shell: bash
         run: |
+          set -euo pipefail
           # Collect package list, excluding packages under ./examples, then run tests
           pkgs=$(go list ./... | grep -v '/examples/')
           echo "Testing packages:"
@@ -45,8 +49,10 @@ jobs:
             echo "No packages to test"
             exit 0
           fi
-          # Run tests with coverage output. If tests fail, the job will fail here.
-          go test $pkgs -v -coverprofile=coverage.out
+          # Run tests verbosely, capture output for JUnit, and also write coverage profile
+          go test $pkgs -v -coverprofile=coverage.out | tee test.out
+          # Convert verbose test output to JUnit XML (propagate failures)
+          $(go env GOPATH)/bin/go-junit-report -set-exit-code < test.out > junit.xml
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -54,9 +60,21 @@ jobs:
           name: coverage-report
           path: coverage.out
 
+      - name: Upload JUnit test report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report
+          path: junit.xml
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: coverage.out
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
