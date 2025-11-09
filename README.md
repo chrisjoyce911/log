@@ -1,11 +1,16 @@
 # github.com/chrisjoyce911/log
 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/chrisjoyce911/log?tab=overview)
+[![codecov](https://codecov.io/gh/chrisjoyce911/log/graph/badge.svg)](https://codecov.io/gh/chrisjoyce911/log)
+[![Go Report Card](https://goreportcard.com/badge/github.com/chrisjoyce911/log)](https://goreportcard.com/report/github.com/chrisjoyce911/log)
+
 Drop-in replacement for the standard library `log` with:
 
 - Levels: TRACE, VERBOSE, DEBUG, DETAIL, INFO, NOTICE, WARN, ERROR, CRITICAL, ALERT, FATAL, PANIC
 - Multi-output routing: send different minimum levels to stdout, files, channels, JSON, etc.
 - Handlers: text (writer), JSON, channel, and colored console
 - Stdlib compatibility: `Print*`, `Fatal*`, `Panic*`, `SetFlags`, `SetPrefix`, `New`, and flags re-exported
+- HTTP middleware: colorized request/access logs with optional body preview
 
 ## Quick start
 
@@ -71,6 +76,47 @@ log.SetPrefix("colored")
 log.Warn("parts colored", "k", 1)
 ```
 
+## HTTP logging middleware
+
+Colorized method and path, severity from status (INFO <400, WARN 4xx, ERROR 5xx), optional body preview for POST/PUT/PATCH.
+
+```go
+mux := http.NewServeMux()
+// register handlers...
+
+// Colorized console
+log.SetColoredOutput(log.LevelDebug, log.ColorOptions{Mode: log.ColorAuto})
+log.SetFlags(log.Ldate | log.Ltime)
+
+// HTTP logging with body preview (2KB cap) and query in display path
+h := log.HTTPLogging(mux, &log.HTTPLogOptions{
+  Mode:         log.ColorAuto,
+  IncludeQuery: true,
+  LogPostBody:  true,
+  MaxBodyBytes: 2048,
+})
+
+_ = http.ListenAndServe(":8080", h)
+```
+
+## Testing helpers
+
+Useful for unit/integration tests.
+
+```go
+// Prevent os.Exit in Fatal* during tests
+log.SetExitFunc(func(code int) { /* capture */ })
+defer log.SetExitFunc(nil)
+
+// Deterministic time for new/default loggers
+log.SetNowFunc(func() time.Time { return fixed })
+defer log.SetNowFunc(nil)
+
+// Silence default output during tests
+log.SetTestingMode(true)
+defer log.SetTestingMode(false)
+```
+
 ## Examples
 
 - `examples/colored_console`: show all levels and per-part coloring
@@ -79,3 +125,12 @@ log.Warn("parts colored", "k", 1)
 - `examples/mylog_file_json`: write JSON logs to file
 - `examples/all`: combined demo
 - `examples/levels_demo`: how min-level filters work
+- `examples/http_logger`: HTTP middleware with colored method/path and optional body logging
+
+## CI
+
+GitHub Actions workflow at `.github/workflows/ci.yml` runs tests on pushes/PRs to `main`, caches modules, excludes `./examples` from coverage, and uploads coverage (Codecov supported).
+
+## Test Coverage
+
+[![Codecov sunburst](https://codecov.io/gh/chrisjoyce911/log/graphs/sunburst.svg?token=AI9ZF6PN5N)](https://codecov.io/gh/chrisjoyce911/log)
