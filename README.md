@@ -99,6 +99,17 @@ h := log.HTTPLogging(mux, &log.HTTPLogOptions{
 _ = http.ListenAndServe(":8080", h)
 ```
 
+## Formatted logging
+
+Use f-variants for printf-style logging.
+
+```go
+log.Infof("service %s started on port %d", "catalog", 8080)
+log.Debugf("loaded %d features", 12)
+```
+
+See `examples/format_demo` for more.
+
 ## Testing helpers
 
 Useful for unit/integration tests.
@@ -126,6 +137,7 @@ defer log.SetTestingMode(false)
 - `examples/all`: combined demo
 - `examples/levels_demo`: how min-level filters work
 - `examples/http_logger`: HTTP middleware with colored method/path and optional body logging
+- `examples/format_demo`: demonstrate formatted logging with f-variants (Infof, Debugf, etc.)
 
 ## CI
 

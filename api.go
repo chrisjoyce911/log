@@ -49,6 +49,18 @@ func Notice(msg string, kv ...any)   { std.logStructured(LevelNotice, msg, kv...
 func Critical(msg string, kv ...any) { std.logStructured(LevelCritical, msg, kv...) }
 func Alert(msg string, kv ...any)    { std.logStructured(LevelAlert, msg, kv...) }
 
+// Formatted helpers on the default logger.
+func Tracef(format string, v ...any)    { std.logf(LevelTrace, format, v...) }
+func Verbosef(format string, v ...any)  { std.logf(LevelVerbose, format, v...) }
+func Debugf(format string, v ...any)    { std.logf(LevelDebug, format, v...) }
+func Detailf(format string, v ...any)   { std.logf(LevelDetail, format, v...) }
+func Infof(format string, v ...any)     { std.logf(LevelInfo, format, v...) }
+func Noticef(format string, v ...any)   { std.logf(LevelNotice, format, v...) }
+func Warnf(format string, v ...any)     { std.logf(LevelWarn, format, v...) }
+func Errorf(format string, v ...any)    { std.logf(LevelError, format, v...) }
+func Criticalf(format string, v ...any) { std.logf(LevelCritical, format, v...) }
+func Alertf(format string, v ...any)    { std.logf(LevelAlert, format, v...) }
+
 // Logger method shims for stdlib-like API
 func (l *Logger) Print(v ...any)                 { l.logf(LevelInfo, "%s", fmt.Sprint(v...)) }
 func (l *Logger) Printf(format string, v ...any) { l.logf(LevelInfo, format, v...) }
@@ -65,6 +77,18 @@ func (l *Logger) Detail(msg string, kv ...any)   { l.logStructured(LevelDetail, 
 func (l *Logger) Notice(msg string, kv ...any)   { l.logStructured(LevelNotice, msg, kv...) }
 func (l *Logger) Critical(msg string, kv ...any) { l.logStructured(LevelCritical, msg, kv...) }
 func (l *Logger) Alert(msg string, kv ...any)    { l.logStructured(LevelAlert, msg, kv...) }
+
+// Formatted helpers on Logger
+func (l *Logger) Tracef(format string, v ...any)    { l.logf(LevelTrace, format, v...) }
+func (l *Logger) Verbosef(format string, v ...any)  { l.logf(LevelVerbose, format, v...) }
+func (l *Logger) Debugf(format string, v ...any)    { l.logf(LevelDebug, format, v...) }
+func (l *Logger) Detailf(format string, v ...any)   { l.logf(LevelDetail, format, v...) }
+func (l *Logger) Infof(format string, v ...any)     { l.logf(LevelInfo, format, v...) }
+func (l *Logger) Noticef(format string, v ...any)   { l.logf(LevelNotice, format, v...) }
+func (l *Logger) Warnf(format string, v ...any)     { l.logf(LevelWarn, format, v...) }
+func (l *Logger) Errorf(format string, v ...any)    { l.logf(LevelError, format, v...) }
+func (l *Logger) Criticalf(format string, v ...any) { l.logf(LevelCritical, format, v...) }
+func (l *Logger) Alertf(format string, v ...any)    { l.logf(LevelAlert, format, v...) }
 
 // Provide the formatMsg used in logger_core without importing fmt there.
 func formatMsg(format string, v ...any) string { return fmt.Sprintf(format, v...) }
