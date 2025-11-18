@@ -1,0 +1,25 @@
+codecov:
+  branch: main
+
+coverage:
+  precision: 2
+  round: down
+  range: 80..100
+  status:
+    project:
+      default:
+        # Compare against base and allow small fluctuations
+        target: auto
+        threshold: 0.5%
+    patch:
+      default:
+        target: auto
+        threshold: 0.5%
+
+ignore:
+  - "examples/**"
+
+comment:
+  layout: "files, diff, flags, components"
+  require_changes: false
+  behavior: default
