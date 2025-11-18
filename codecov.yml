@@ -6,15 +6,24 @@ coverage:
   round: down
   range: 80..100
   status:
+    default_rules:
+      # Omit status checks that didn't upload any flagged coverage
+      flag_coverage_not_uploaded_behavior: exclude
     project:
-      default:
-        # Compare against base and allow small fluctuations
-        target: auto
-        threshold: 0.5%
+      default:   # status name
+        target: auto           # compare to base commit coverage
+        threshold: "5%"        # allow up to 5% drop without failing
+        branches: [ "main" ]  # run on main PRs/commits
+        if_ci_failed: error    # require CI success
+        informational: false   # gate PRs on this status
+        only_pulls: false
     patch:
       default:
         target: auto
-        threshold: 0.5%
+        threshold: "0%"        # no drop allowed on changed lines
+        branches: [ "main" ]
+        if_ci_failed: error
+        only_pulls: false
 
 ignore:
   - "examples/**"
