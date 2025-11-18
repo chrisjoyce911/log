@@ -163,6 +163,23 @@ func TestHTTPLogging_ColorOff_NoAnsi(t *testing.T) {
 	})
 }
 
+func TestHTTPLogging_DefaultMode_ColorsOn(t *testing.T) {
+	withStdReset(t, func() {
+		var buf bytes.Buffer
+		SetOutput(&buf)
+		SetFlags(Ldate | Ltime)
+		// Default (zero value) should be ColorOn
+		h := HTTPLogging(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}), &HTTPLogOptions{})
+		rr := httptest.NewRecorder()
+		h.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/default", nil))
+		if !strings.Contains(buf.String(), "\x1b[") {
+			t.Fatalf("expected ANSI color with default mode (ColorOn)")
+		}
+	})
+}
+
 func TestHTTPLogging_MethodColorBranches(t *testing.T) {
 	withStdReset(t, func() {
 		var buf bytes.Buffer

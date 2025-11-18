@@ -31,9 +31,9 @@ var defaultPalette = map[Level]string{
 type ColorMode int
 
 const (
-	ColorAuto ColorMode = iota // enable if TTY and NO_COLOR not set
-	ColorOn
-	ColorOff
+	ColorOn  ColorMode = iota // default: always enable colors
+	ColorOff                  // disable colors
+	ColorAuto                 // enable if TTY and NO_COLOR not set
 )
 
 // ColorOptions configures the colored console handler.
@@ -55,7 +55,7 @@ type ColoredWriterHandler struct {
 }
 
 // NewColoredWriterHandler constructs a colored handler writing to w.
-// When Mode=ColorAuto, it is enabled only if w is a terminal and NO_COLOR is not set.
+// By default (Mode=ColorOn) colors are always enabled. Use ColorOff to disable, or ColorAuto for TTY detection.
 func NewColoredWriterHandler(w io.Writer, opts ColorOptions) *ColoredWriterHandler {
 	if opts.Palette == nil {
 		opts.Palette = defaultPalette
@@ -64,17 +64,14 @@ func NewColoredWriterHandler(w io.Writer, opts ColorOptions) *ColoredWriterHandl
 	if !opts.ColorLevel && !opts.ColorPrefix && !opts.ColorMessage && !opts.ColorAttrs {
 		opts.ColorLevel = true
 	}
-	enabled := false
+	enabled := true // default: ColorOn
 	switch opts.Mode {
-	case ColorOn:
-		enabled = true
 	case ColorOff:
 		enabled = false
-	default: // auto
+	case ColorAuto:
 		// Check NO_COLOR and TTY
-		if os.Getenv("NO_COLOR") != "" {
-			enabled = false
-		} else {
+		enabled = false // default to false for auto mode
+		if os.Getenv("NO_COLOR") == "" {
 			// Best effort: detect if writer is a file with FD and is a terminal
 			if f, ok := w.(*os.File); ok {
 				fd := f.Fd()

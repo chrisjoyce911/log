@@ -57,16 +57,21 @@ log.Info("json to file", "user", "alice")
 
 ## Colored console output
 
-Color levels automatically when the output is a terminal (honors NO_COLOR). Or force colors on.
+Colors are enabled by default. Use `ColorOff` to disable or `ColorAuto` for TTY detection (honors NO_COLOR).
 
 ```go
-// Auto mode (TTY only)
-log.SetColoredOutput(log.LevelInfo, log.ColorOptions{Mode: log.ColorAuto})
+// Default: colors always on
+log.SetColoredOutput(log.LevelInfo, log.ColorOptions{})
 log.Info("hello", "user", "alice")
 
-// Force colors on and color specific parts
+// Disable colors
+log.SetColoredOutput(log.LevelInfo, log.ColorOptions{Mode: log.ColorOff})
+
+// Auto mode (TTY only)
+log.SetColoredOutput(log.LevelInfo, log.ColorOptions{Mode: log.ColorAuto})
+
+// Customize which parts are colored
 log.SetColoredOutput(log.LevelDebug, log.ColorOptions{
-  Mode:         log.ColorOn,
   ColorLevel:   true,   // default
   ColorPrefix:  true,
   ColorMessage: true,
@@ -78,19 +83,18 @@ log.Warn("parts colored", "k", 1)
 
 ## HTTP logging middleware
 
-Colorized method and path, severity from status (INFO <400, WARN 4xx, ERROR 5xx), optional body preview for POST/PUT/PATCH.
+Colorized method and path (default: always on), severity from status (INFO <400, WARN 4xx, ERROR 5xx), optional body preview for POST/PUT/PATCH.
 
 ```go
 mux := http.NewServeMux()
 // register handlers...
 
-// Colorized console
-log.SetColoredOutput(log.LevelDebug, log.ColorOptions{Mode: log.ColorAuto})
+// Colorized console (colors on by default)
+log.SetColoredOutput(log.LevelDebug, log.ColorOptions{})
 log.SetFlags(log.Ldate | log.Ltime)
 
 // HTTP logging with body preview (2KB cap) and query in display path
 h := log.HTTPLogging(mux, &log.HTTPLogOptions{
-  Mode:         log.ColorAuto,
   IncludeQuery: true,
   LogPostBody:  true,
   MaxBodyBytes: 2048,

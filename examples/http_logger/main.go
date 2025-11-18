@@ -42,16 +42,16 @@ func echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Colorize console output (auto enables on TTYs; use ColorOn to force).
-	log.SetColoredOutput(log.LevelDebug, log.ColorOptions{Mode: log.ColorAuto, ColorLevel: true})
+	// Colorize console output (colors on by default; use ColorOff to disable, ColorAuto for TTY detection).
+	log.SetColoredOutput(log.LevelDebug, log.ColorOptions{ColorLevel: true})
 	log.SetFlags(log.Ldate | log.Ltime)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hello", hello)
 	mux.HandleFunc("/echo", echo)
 
-	// Wrap with logging middleware from the package
-	h := log.HTTPLogging(mux, &log.HTTPLogOptions{Mode: log.ColorAuto, IncludeQuery: true, LogPostBody: true, MaxBodyBytes: 2048})
+	// Wrap with logging middleware from the package (colors on by default)
+	h := log.HTTPLogging(mux, &log.HTTPLogOptions{IncludeQuery: true, LogPostBody: true, MaxBodyBytes: 2048})
 
 	log.Info("starting server", "addr", ":8080", "routes", "/hello (GET), /echo (POST|PUT|PATCH)")
 	if err := http.ListenAndServe(":8080", h); err != nil {

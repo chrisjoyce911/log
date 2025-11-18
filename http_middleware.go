@@ -34,17 +34,17 @@ type HTTPLogOptions struct {
 
 func (o *HTTPLogOptions) enabled() bool {
 	switch o.Mode {
-	case ColorOn:
-		return true
 	case ColorOff:
 		return false
-	default:
+	case ColorAuto:
 		if os.Getenv("NO_COLOR") != "" {
 			return false
 		}
 		// Best-effort: colorize when stdout is a TTY
 		fd := os.Stdout.Fd()
 		return isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd)
+	default: // ColorOn
+		return true
 	}
 }
 

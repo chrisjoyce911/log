@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-	// Force colors ON for demo purposes. In real apps use ColorAuto.
-	log.SetColoredOutput(log.LevelAll, log.ColorOptions{Mode: log.ColorOn})
+	// Colors are on by default. Use ColorOff to disable, or ColorAuto for TTY detection.
+	log.SetColoredOutput(log.LevelAll, log.ColorOptions{})
 	log.SetFlags(log.Ldate | log.Ltime)
 
 	log.SetPrefix("demo")
@@ -25,7 +25,6 @@ func main() {
 
 	// Show per-part coloring: color level + prefix + message + attrs.
 	log.SetColoredOutput(log.LevelAll, log.ColorOptions{
-		Mode:         log.ColorOn,
 		ColorLevel:   true,
 		ColorPrefix:  true,
 		ColorMessage: true,
