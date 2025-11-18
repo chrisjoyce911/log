@@ -17,10 +17,25 @@ coverage:
         if_ci_failed: error    # require CI success
         informational: false   # gate PRs on this status
         only_pulls: false
+      unit:
+        target: auto
+        threshold: "5%"
+        flags: [ "unit" ]
+        branches: [ "main" ]
+        if_ci_failed: error
+        informational: false
+        only_pulls: false
     patch:
       default:
         target: auto
         threshold: "0%"        # no drop allowed on changed lines
+        branches: [ "main" ]
+        if_ci_failed: error
+        only_pulls: false
+      unit:
+        target: auto
+        threshold: "0%"
+        flags: [ "unit" ]
         branches: [ "main" ]
         if_ci_failed: error
         only_pulls: false
@@ -32,3 +47,53 @@ comment:
   layout: "files, diff, flags, components"
   require_changes: false
   behavior: default
+
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: auto
+        threshold: "5%"
+      - type: patch
+        target: "90%"
+
+# Define virtual Components to slice coverage by areas of the codebase
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        branches: [ "main" ]
+      - type: patch
+        target: auto
+        branches: [ "main" ]
+  individual_components:
+    - component_id: core
+      name: Core API & Levels
+      paths:
+        - api.go
+        - logger_core.go
+        - flags.go
+        - levels.go
+        - types.go
+    - component_id: handlers
+      name: Handlers
+      paths:
+        - handler_*.go
+    - component_id: http
+      name: HTTP Middleware
+      paths:
+        - http_middleware.go
+    - component_id: fileio
+      name: File Helpers
+      paths:
+        - file_helpers.go
+    - component_id: timefmt
+      name: Time Formatting
+      paths:
+        - timefmt.go
+    - component_id: testing_helpers
+      name: Testing Helpers
+      paths:
+        - testing_helpers.go

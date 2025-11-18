@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: ["main"]
   pull_request:
-    branches: [ 'main' ]
+    branches: ["main"]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.19' ]
+        go-version: ["1.19"]
 
     steps:
       - uses: actions/checkout@v4
@@ -71,6 +71,7 @@ jobs:
         with:
           files: coverage.out
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit
           fail_ci_if_error: true
 
       - name: Upload test results to Codecov
@@ -78,3 +79,4 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit
