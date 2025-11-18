@@ -31,9 +31,9 @@ var defaultPalette = map[Level]string{
 type ColorMode int
 
 const (
-	ColorOn  ColorMode = iota // default: always enable colors
-	ColorOff                  // disable colors
-	ColorAuto                 // enable if TTY and NO_COLOR not set
+	ColorOn   ColorMode = iota // default: always enable colors
+	ColorOff                   // disable colors
+	ColorAuto                  // enable if TTY and NO_COLOR not set
 )
 
 // ColorOptions configures the colored console handler.
