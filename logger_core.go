@@ -9,6 +9,32 @@ import (
 	"time"
 )
 
+// File registry to auto-close files opened by the package
+var (
+	openFilesMu sync.Mutex
+	openFiles   []*os.File
+)
+
+// registerFile adds a file to the auto-close registry
+func registerFile(f *os.File) {
+	openFilesMu.Lock()
+	openFiles = append(openFiles, f)
+	openFilesMu.Unlock()
+}
+
+// Close closes all files opened by the package helpers.
+// Call this before your application exits to ensure clean shutdown.
+func Close() {
+	openFilesMu.Lock()
+	defer openFilesMu.Unlock()
+	for _, f := range openFiles {
+		if f != nil {
+			_ = f.Close()
+		}
+	}
+	openFiles = nil
+}
+
 // output wraps a handler with a minimum level threshold.
 type output struct {
 	h   Handler

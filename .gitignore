@@ -1,1 +1,4 @@
 cover.out
+examples/dual_output/logs/ac-sync.log
+examples/dual_output/logs/debug.log
+

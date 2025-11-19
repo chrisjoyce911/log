@@ -33,33 +33,39 @@ func OpenFileAppend(path string, perm os.FileMode) (*os.File, error) {
 
 // SetOutputFile ensures the file exists (creating parent dirs) and sets the default
 // logger's output to that file, truncating any existing content. It returns the open *os.File.
+// The file is registered for automatic cleanup when log.Close() is called.
 func SetOutputFile(path string) (*os.File, error) {
 	f, err := OpenFileTruncate(path, 0o644)
 	if err != nil {
 		return nil, err
 	}
 	SetOutput(f)
+	registerFile(f)
 	return f, nil
 }
 
 // AddFileWriter ensures the file exists and attaches it as a writer for the given minimum level
 // on the default logger, truncating any existing content. It returns the open *os.File.
+// The file is registered for automatic cleanup when log.Close() is called.
 func AddFileWriter(minLevel Level, path string) (*os.File, error) {
 	f, err := OpenFileTruncate(path, 0o644)
 	if err != nil {
 		return nil, err
 	}
 	AddWriter(minLevel, f)
+	registerFile(f)
 	return f, nil
 }
 
 // AddJSONFile ensures the file exists and attaches a JSON handler for the given minimum level
 // on the default logger, truncating any existing content. It returns the open *os.File.
+// The file is registered for automatic cleanup when log.Close() is called.
 func AddJSONFile(minLevel Level, path string) (*os.File, error) {
 	f, err := OpenFileTruncate(path, 0o644)
 	if err != nil {
 		return nil, err
 	}
 	AddHandler(minLevel, NewJSONHandler(f))
+	registerFile(f)
 	return f, nil
 }
