@@ -33,7 +33,7 @@ const (
 func (l Level) String() string {
 	switch l {
 	case LevelAll:
-		return "ALL.    "
+		return "ALL     "
 	case LevelOff:
 		return "OFF     "
 	case LevelTrace:
