@@ -33,33 +33,33 @@ const (
 func (l Level) String() string {
 	switch l {
 	case LevelAll:
-		return "ALL"
+		return "ALL.    "
 	case LevelOff:
-		return "OFF"
+		return "OFF     "
 	case LevelTrace:
-		return "TRACE"
+		return "TRACE   "
 	case LevelVerbose:
-		return "VERBOSE"
+		return "VERBOSE "
 	case LevelDebug:
-		return "DEBUG"
+		return "DEBUG   "
 	case LevelDetail:
-		return "DETAIL"
+		return "DETAIL  "
 	case LevelInfo:
-		return "INFO"
+		return "INFO    "
 	case LevelNotice:
-		return "NOTICE"
+		return "NOTICE  "
 	case LevelWarn:
-		return "WARN"
+		return "WARN    "
 	case LevelError:
-		return "ERROR"
+		return "ERROR   "
 	case LevelCritical:
 		return "CRITICAL"
 	case LevelAlert:
-		return "ALERT"
+		return "ALERT   "
 	case LevelFatal:
-		return "FATAL"
+		return "FATAL   "
 	case LevelPanic:
-		return "PANIC"
+		return "PANIC.  "
 	default:
 		return "LEVEL(" + strconv.Itoa(int(l)) + ")"
 	}
