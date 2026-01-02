@@ -42,7 +42,7 @@ func TestWriterHandlerNoMessage(t *testing.T) {
 	r := Record{Level: LevelInfo, Prefix: "p", Flags: LstdFlags}
 	assert.NoError(t, h.Handle(r))
 	out := buf.String()
-	assert.Contains(t, out, "INFO [p]")
+	assert.Contains(t, out, "INFO     [p]")
 }
 
 func TestJSONHandlerPrefixAndNilWriter(t *testing.T) {

@@ -58,7 +58,7 @@ func TestAddJSONFile_AutoRegisters(t *testing.T) {
 
 		data, err := os.ReadFile(jsonFile)
 		assert.NoError(t, err)
-		assert.Contains(t, string(data), `"level":"INFO"`)
+		assert.Contains(t, string(data), `"level":"INFO    "`)
 		assert.Contains(t, string(data), `"key":"value"`)
 	})
 }

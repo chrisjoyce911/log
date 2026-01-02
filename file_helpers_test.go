@@ -52,7 +52,7 @@ func TestSetOutputFileAndAddFileWriterAndJSON(t *testing.T) {
 		assert.True(t, s.Scan())
 		var m map[string]any
 		assert.NoError(t, json.Unmarshal([]byte(s.Text()), &m))
-		assert.Equal(t, "INFO", m["level"])
+		assert.Equal(t, "INFO    ", m["level"])
 		attrs, _ := m["attrs"].(map[string]any)
 		assert.Equal(t, float64(1), attrs["k"])
 		assert.False(t, strings.Contains(string(b1), "\n\n"))

@@ -40,8 +40,8 @@ func TestLevelsDemoRun_CoversAllAndFilters(t *testing.T) {
 
 	// In ALL section, low and high levels should appear
 	all := section(out, "ALL")
-	assert.Contains(t, all, "DEBUG [Debug] hello")
-	assert.Contains(t, all, "ALERT [Alert] hello")
+	assert.Contains(t, all, "DEBUG    [Debug] hello")
+	assert.Contains(t, all, "ALERT    [Alert] hello")
 
 	// In OFF section, no log lines should appear (only header printed outside this slice)
 	off := section(out, "OFF")

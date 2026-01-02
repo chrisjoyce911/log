@@ -59,7 +59,7 @@ func (l Level) String() string {
 	case LevelFatal:
 		return "FATAL   "
 	case LevelPanic:
-		return "PANIC.  "
+		return "PANIC   "
 	default:
 		return "LEVEL(" + strconv.Itoa(int(l)) + ")"
 	}

@@ -56,19 +56,19 @@ func TestPrintAndLevelsToWriter(t *testing.T) {
 		Alertf("af: %s", "a")
 
 		out := buf.String()
-		assert.Contains(t, out, "INFO [pfx] pmsg")
-		assert.Contains(t, out, "INFO [pfx] pmsg2")
-		assert.Contains(t, out, "INFO [pfx] pmsg3")
-		assert.Contains(t, out, "DEBUG [pfx] dmsg")
-		assert.Contains(t, out, "TRACE [pfx] tmsg")
-		assert.Contains(t, out, "VERBOSE [pfx] vmsg")
-		assert.Contains(t, out, "DETAIL [pfx] demsg")
-		assert.Contains(t, out, "INFO [pfx] imsg")
-		assert.Contains(t, out, "NOTICE [pfx] nmsg")
-		assert.Contains(t, out, "WARN [pfx] wmsg")
-		assert.Contains(t, out, "ERROR [pfx] emsg")
+		assert.Contains(t, out, "INFO     [pfx] pmsg")
+		assert.Contains(t, out, "INFO     [pfx] pmsg2")
+		assert.Contains(t, out, "INFO     [pfx] pmsg3")
+		assert.Contains(t, out, "DEBUG    [pfx] dmsg")
+		assert.Contains(t, out, "TRACE    [pfx] tmsg")
+		assert.Contains(t, out, "VERBOSE  [pfx] vmsg")
+		assert.Contains(t, out, "DETAIL   [pfx] demsg")
+		assert.Contains(t, out, "INFO     [pfx] imsg")
+		assert.Contains(t, out, "NOTICE   [pfx] nmsg")
+		assert.Contains(t, out, "WARN     [pfx] wmsg")
+		assert.Contains(t, out, "ERROR    [pfx] emsg")
 		assert.Contains(t, out, "CRITICAL [pfx] cmsg")
-		assert.Contains(t, out, "ALERT [pfx] amsg")
+		assert.Contains(t, out, "ALERT    [pfx] amsg")
 	})
 }
 
@@ -99,7 +99,7 @@ func TestLoggerInstanceAndWith(t *testing.T) {
 	l.Criticalf("cf: %s", "c")
 	l.Alert("a")
 	l.Alertf("af: %s", "a")
-	assert.Contains(t, buf.String(), "INFO [myp:] hello")
+	assert.Contains(t, buf.String(), "INFO     [myp:] hello")
 }
 
 func TestAddHandlerAndJSONOutput(t *testing.T) {
@@ -115,7 +115,7 @@ func TestAddHandlerAndJSONOutput(t *testing.T) {
 		assert.Len(t, lines, 1)
 		var m map[string]any
 		assert.NoError(t, json.Unmarshal([]byte(lines[0]), &m))
-		assert.Equal(t, "INFO", m["level"])
+		assert.Equal(t, "INFO    ", m["level"])
 		assert.Equal(t, "json test", m["msg"])
 		attrs, _ := m["attrs"].(map[string]any)
 		assert.Equal(t, "val", attrs["key"])
@@ -143,12 +143,12 @@ func TestStringChanHandler(t *testing.T) {
 	r := Record{Level: LevelInfo, Message: "m", Flags: LstdFlags}
 	assert.NoError(t, h.Handle(r))
 	str := <-ch
-	assert.Contains(t, str, "INFO m")
+	assert.Contains(t, str, "INFO     m")
 
 	r2 := Record{Level: LevelInfo, Message: "m2", Flags: 0}
 	assert.NoError(t, h.Handle(r2))
 	str2 := <-ch
-	assert.Equal(t, "INFO m2", str2)
+	assert.Equal(t, "INFO     m2", str2)
 }
 
 func TestDefaultAndHelpers(t *testing.T) {
@@ -163,7 +163,7 @@ func TestWriterHandlerFormatting(t *testing.T) {
 	r := Record{Level: LevelWarn, Message: "hi", Prefix: "p", Flags: LstdFlags, Attrs: []Attr{{Key: "k", Value: 1}}}
 	assert.NoError(t, h.Handle(r))
 	s := buf.String()
-	assert.Contains(t, s, "WARN [p] hi k=1")
+	assert.Contains(t, s, "WARN     [p] hi k=1")
 }
 
 func TestFatalInterceptsExit(t *testing.T) {

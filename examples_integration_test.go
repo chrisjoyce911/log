@@ -64,7 +64,7 @@ func TestExampleMylogFileJSON(t *testing.T) {
 	assert.GreaterOrEqual(t, len(lines), 1)
 	var m map[string]any
 	assert.NoError(t, json.Unmarshal([]byte(lines[0]), &m))
-	assert.Equal(t, "INFO", m["level"])
+	assert.Equal(t, "INFO    ", m["level"])
 	assert.True(t, strings.Contains(lines[0], "\"msg\":"))
 }
 
