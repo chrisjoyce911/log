@@ -115,8 +115,8 @@ func HTTPLogging(next http.Handler, opts *HTTPLogOptions) http.Handler {
 			}
 		}
 		// Pre-request line with highlighted method and path in the message
-		msg := colorWrap(r.Method, methodColor(r.Method), colorOn) + " " + colorWrap(dispPath, ansiBold, colorOn)
-		attrs := []any{"remote", r.RemoteAddr, "ua", r.UserAgent()}
+		msg := colorWrap(r.Method, methodColor(r.Method), colorOn) + " " + r.RemoteAddr + " " + colorWrap(dispPath, ansiBold, colorOn)
+		attrs := []any{"ua", r.UserAgent()}
 		if bodyPreview != "" {
 			attrs = append(attrs, "body", bodyPreview)
 		}
@@ -132,7 +132,7 @@ func HTTPLogging(next http.Handler, opts *HTTPLogOptions) http.Handler {
 			status = http.StatusOK
 		}
 		// Access line; message shows colored method/path again
-		msg2 := colorWrap(r.Method, methodColor(r.Method), colorOn) + " " + colorWrap(dispPath, ansiBold, colorOn)
+		msg2 := colorWrap(r.Method, methodColor(r.Method), colorOn) + " " + r.RemoteAddr + " " + colorWrap(dispPath, ansiBold, colorOn)
 		accessAttrs := []any{"status", status, "bytes", wrapper.bytes, "duration", dur.String()}
 		switch {
 		case status >= 500:
